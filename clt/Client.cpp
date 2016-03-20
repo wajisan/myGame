@@ -38,7 +38,7 @@ int	Client::Run()
 
   while (1)
     {
-      std::cout << "Enter Message : ";
+      std::cout << "Please press one of the good letter : ";
       scanf("%s", message);///separe words , need change
 
       if (send(this->sock, message, strlen(message), 0) < 0)
@@ -52,7 +52,7 @@ int	Client::Run()
 	  std::cerr << "Recv failed" << std::endl;
 	  break;
         }
-      std::cout << "Server reply" << std::endl;
+      std::cout << "Server : ";
       puts(server_reply);
     }
   close(this->sock);
