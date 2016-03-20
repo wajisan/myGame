@@ -1,17 +1,38 @@
 #include "Server.h"
 
+bool		check(std::string str)
+{
+  std::string letter;
+  std::ifstream file("srv/letter.txt");
+
+  if (file)
+    {
+      while (std::getline(file, letter))
+	{
+	  if (str == letter)
+	    return true;
+	}
+    }
+  return false;
+}
+
 void		*Connect(void *socket_desc)
 {
   int		sock = *(int*)socket_desc;
   int		read_size;
   char		*message;
   char		cmsg[2000];
+  std::string	str;
      
   while ((read_size = recv(sock , cmsg , 2000 , 0)) > 0 )
     {
       cmsg[read_size] = '\0';
-      
-      write(sock , cmsg , strlen(cmsg));
+      str = cmsg;
+      if (check(str))
+	write(sock , "Nice!" , 5);
+      else
+	write(sock , "Wrong!" , 6);
+
       std::cout << "Client (" << sock << "): " << cmsg << std::endl;
       memset(cmsg, 0, 2000);//clear
     }
@@ -49,7 +70,7 @@ int	Server::Init()
   std::cout << "Bind is done" << std::endl;
      
   listen(this->socket_desc , 3);
-  std::cout << "Waiting..." << std::endl;
+  std::cout << "Ready to connect" << std::endl;
 }
 
 int	Server::Run()
